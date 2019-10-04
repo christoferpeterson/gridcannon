@@ -26,9 +26,6 @@ const Gridcannon = function(context) {
 
 Gridcannon.prototype.run = function() {
     this.assets.push(this.gameboard = this.buildGameBoard());
-    this.deck = this.buildDeck(NUMBER_OF_JOKERS);
-    this.deck = this.shuffle(this.deck);
-    this.shameDeck = [];
     this.gameLoopId = setInterval(() => this.loop(), 1000 / FPS);
 }
 
@@ -85,11 +82,20 @@ Gridcannon.prototype.buildDeck = (numberOfJokers) => {
     return output;
 }
 
+Gridcannon.prototype.newGame = (seed) => {
+    // TODO: how to seed?
+    this.state = {};
+    this.state.deck = this.buildDeck(NUMBER_OF_JOKERS);
+    this.state.deck = this.shuffle(this.deck, seed);
+    this.state.shameDeck = [];
+}
+
 /**
  * Shuffles array in place. ES6 version
  * @param {Array} a items An array containing the items.
+ * TODO: how to seed?
  */
-Gridcannon.prototype.shuffle = (a) => {
+Gridcannon.prototype.shuffle = (a, seed) => {
     for (let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [a[i], a[j]] = [a[j], a[i]];
@@ -198,7 +204,6 @@ Button.prototype.draw = function(ctx) {
     this.width = measure.width + this.padding;
     ctx.fillStyle = '#FFFFFF'; 
     ctx.fillStyle = 'rgba(225,225,225,0.5)';
-    console.log(this);
     ctx.fillRect(this.x, this.y, this.width, this.height); 
     ctx.fillStyle = `rgba(255,255,255,1)`;
     ctx.fillText(this.text, this.x + this.width/2, this.y + this.height/2);
